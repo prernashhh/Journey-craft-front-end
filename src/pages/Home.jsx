@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Search, MessageSquare, User, Mail } from "lucide-react";
-import axios from "axios";
+import api from "../config/api.js"; // Import the API client
 import LoginSignup from "./LoginSignup";
 import Navbar from "../components/Navbar";
 import "./Home.css";
@@ -15,7 +15,7 @@ function Dashboard() {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/events');
+        const response = await api.get('/api/events');
         setEvents(response.data);
         setLoading(false);
       } catch (err) {

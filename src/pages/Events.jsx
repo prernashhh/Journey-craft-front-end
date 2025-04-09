@@ -36,7 +36,8 @@ function Events() {
     
     const filtered = events.filter(event => {
       const titleMatch = event.title.toLowerCase().includes(query);
-      const locationMatch = `${event.location.city}, ${event.location.country}`.toLowerCase().includes(query);
+      const locationMatch = event.location && 
+        `${event.location.city}, ${event.location.country}`.toLowerCase().includes(query);
       const tagsMatch = event.tags?.some(tag => tag.toLowerCase().includes(query));
       
       return titleMatch || locationMatch || tagsMatch;
@@ -74,16 +75,6 @@ function Events() {
               className="event-card"
               onClick={() => setSelectedEvent(event)}
             >
-              {/* Image display temporarily removed 
-              {event.images?.[0] && (
-                <img 
-                  src={event.images[0].url} 
-                  alt={event.title} 
-                  className="event-image"
-                />
-              )}
-              */}
-              
               <div className="event-details">
                 <h2 className="event-title">{event.title}</h2>
                 

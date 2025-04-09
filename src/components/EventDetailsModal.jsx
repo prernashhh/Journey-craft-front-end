@@ -1,8 +1,8 @@
-import { X, Calendar, MapPin, Clock, Users, Tag, Heart } from "lucide-react";
-import "./EventDetailsModal.css";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
+import { X, Calendar, MapPin, Clock, Users, Tag, Heart, Share2, ArrowRight } from 'lucide-react';
+import api from '../config/api.js'; // Import the API client
+import './EventDetailsModal.css';
 import PaymentModal from './PaymentModal';
-import axios from 'axios';
 
 function EventDetailsModal({ event, onClose }) {
   const [showPayment, setShowPayment] = useState(false);
@@ -12,13 +12,12 @@ function EventDetailsModal({ event, onClose }) {
   useEffect(() => {
     const checkWishlistStatus = async () => {
       try {
+        if (!event?._id) return;
+
         const token = localStorage.getItem('token');
         if (!token) return;
 
-        const response = await axios.get(
-          `http://localhost:5000/api/wishlist/check/event/${event._id}`,
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
+        const response = await api.get(`/api/wishlist/check/event/${event._id}`);
         setIsInWishlist(response.data.inWishlist);
       } catch (error) {
         console.error('Error checking wishlist status:', error);
@@ -33,7 +32,6 @@ function EventDetailsModal({ event, onClose }) {
   };
 
   const handlePaymentSuccess = () => {
-    // Here you would typically update the booking status
     alert('Booking successful!');
   };
 
@@ -47,16 +45,9 @@ function EventDetailsModal({ event, onClose }) {
       }
 
       if (isInWishlist) {
-        await axios.delete(
-          `http://localhost:5000/api/wishlist/events/${event._id}`,
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
+        await api.delete(`/api/wishlist/events/${event._id}`);
       } else {
-        await axios.post(
-          'http://localhost:5000/api/wishlist/events',
-          { eventId: event._id },
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
+        await api.post('/api/wishlist/events', { eventId: event._id });
       }
       setIsInWishlist(!isInWishlist);
     } catch (error) {
