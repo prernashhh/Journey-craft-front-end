@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import api from '../config/api.js'; // Import the API client
 import './Interests.css'; // Import the CSS file for styling
 
 const interestsList = [
@@ -54,8 +54,8 @@ const Interests = () => {
                 return;
             }
 
-            await axios.put(
-                'http://localhost:5000/api/users/me/interests', 
+            await api.put(
+                '/users/me/interests', 
                 { interests: selectedInterests },
                 {
                     headers: {
