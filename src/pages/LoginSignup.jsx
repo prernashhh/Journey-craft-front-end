@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Mail, User, Lock } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from "../context/AuthContext";
-import axios from "axios";
+import api from '../config/api.js';
 import "./LoginSignup.css";
 
 function LoginSignup({ onClose }) {
@@ -38,9 +38,9 @@ function LoginSignup({ onClose }) {
         password: formData.password,
         role: formData.role || 'traveller'
       };
-
+      
       if (isLogin) {
-        const response = await axios.post('http://localhost:5000/api/auth/login', {
+        const response = await api.post('/api/auth/login', {
           email: formData.email,
           password: formData.password
         });
@@ -49,7 +49,7 @@ function LoginSignup({ onClose }) {
         localStorage.setItem('user', JSON.stringify(user));
         navigate('/dashboard');
       } else {
-        const response = await axios.post('http://localhost:5000/api/auth/register', registerData);
+        const response = await api.post('/api/auth/register', registerData);
         const { token, user } = response.data.data;
         localStorage.setItem('token', token);
         localStorage.setItem('user', JSON.stringify(user));
@@ -80,7 +80,7 @@ function LoginSignup({ onClose }) {
       const user = result.user;
       
       // Send user data to backend
-      const response = await axios.post('http://localhost:5000/api/auth/google', {
+      const response = await api.post('/api/auth/google', {
         name: user.displayName,
         email: user.email,
         uid: user.uid,

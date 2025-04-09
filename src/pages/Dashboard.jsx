@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Search, MessageSquare, Calendar, MapPin, Clock } from "lucide-react";
-import axios from 'axios';
+import api from '../config/api.js';
 import './Dashboard.css';
 import EventDetailsModal from '../components/EventDetailsModal';
 import ItineraryDetailsModal from '../components/ItineraryDetailsModal';
@@ -26,12 +26,9 @@ function Dashboard() {
 
     const fetchData = async () => {
       try {
-        const token = localStorage.getItem('token');
-        const headers = { Authorization: `Bearer ${token}` };
-
         const [eventsRes, itinerariesRes] = await Promise.all([
-          axios.get('http://localhost:5000/api/events', { headers }),
-          axios.get('http://localhost:5000/api/itineraries', { headers })
+          api.get('/api/events'),
+          api.get('/api/itineraries')
         ]);
 
         setEvents(eventsRes.data);

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Calendar, MapPin, Clock, Tag } from "lucide-react";
-import axios from 'axios';
+import api from '../config/api.js';
 import './Events.css';
 import EventDetailsModal from '../components/EventDetailsModal';
 import Navbar from '../components/Navbar';
@@ -16,10 +16,7 @@ function Events() {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const token = localStorage.getItem('token');
-        const response = await axios.get('http://localhost:5000/api/events', {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+        const response = await api.get('/api/events');
         setEvents(response.data);
         setFilteredEvents(response.data);
         setLoading(false);
