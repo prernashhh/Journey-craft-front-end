@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Search, MessageSquare, Calendar, MapPin, Clock } from "lucide-react";
-import api from '../config/api.js';
+import api from '../config/api'; // Import the API client
 import './Dashboard.css';
 import EventDetailsModal from '../components/EventDetailsModal';
 import ItineraryDetailsModal from '../components/ItineraryDetailsModal';

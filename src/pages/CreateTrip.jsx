@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import axios from 'axios';
 import Navbar from '../components/Navbar';
 import './CreateTrip.css';
+import api from '../config/api'; // Import the API client
 
 function CreateTrip() {
   const { user } = useAuth();
@@ -137,17 +137,7 @@ function CreateTrip() {
 
       console.log('Sending payload:', tripPayload); // For debugging
       
-      const token = localStorage.getItem('token');
-      const response = await axios.post(
-        'http://localhost:5000/api/itineraries',
-        tripPayload,
-        { 
-          headers: { 
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          } 
-        }
-      );
+      const response = await api.post('/api/itineraries', tripPayload);
       
       navigate('/manager-dashboard');
     } catch (err) {
@@ -156,7 +146,7 @@ function CreateTrip() {
       if (err.response && err.response.data && err.response.data.error) {
         setError(`Failed to create trip: ${err.response.data.error}`);
       } else {
-        setError('Failed to create trip. Please check your form data and try again.');
+        setError('Failed to create trip. Please check your internet connection and try again.');
       }
     } finally {
       setLoading(false);

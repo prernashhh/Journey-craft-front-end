@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import axios from 'axios';
+import api from '../config/api'; // Import the API client
 import { Search, SendHorizontal, UserPlus, ArrowLeft } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import './Messages.css';
@@ -43,10 +43,7 @@ function Messages() {
   const fetchConversations = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:5000/api/messages/conversations', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const response = await api.get('/api/messages/conversations');
       setConversations(response.data);
       setLoading(false);
     } catch (err) {
@@ -59,20 +56,13 @@ function Messages() {
   const fetchMessages = async (otherUserId) => {
     try {
       setLoading(true);
-      const token = localStorage.getItem('token');
-      const response = await axios.get(`http://localhost:5000/api/messages/${otherUserId}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const response = await api.get(`/api/messages/${otherUserId}`);
       setMessages(response.data);
       setLoading(false);
       
       // Mark messages as read
       try {
-        await axios.put(
-          `http://localhost:5000/api/messages/${otherUserId}/read`,
-          {},
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
+        await api.put(`/api/messages/${otherUserId}/read`, {});
         
         // Update unread count in conversations list
         setConversations(prevConversations => 
@@ -96,15 +86,10 @@ function Messages() {
     if (!newMessage.trim() || !selectedConversation) return;
     
     try {
-      const token = localStorage.getItem('token');
-      const response = await axios.post(
-        'http://localhost:5000/api/messages',
-        {
-          recipientId: selectedConversation.user._id,
-          content: newMessage
-        },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      const response = await api.post('/api/messages', {
+        recipientId: selectedConversation.user._id,
+        content: newMessage
+      });
       
       // Add the sent message to the messages list
       setMessages(prev => [...prev, response.data]);
@@ -132,11 +117,8 @@ function Messages() {
     try {
       setLoading(true);
       setError(null); // Reset any previous errors
-      const token = localStorage.getItem('token');
       
-      const response = await axios.get('http://localhost:5000/api/users/me/mutual-followers', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const response = await api.get('/api/users/me/mutual-followers');
       
       console.log('Mutual followers response:', response.data);
       setFollowers(response.data || []);

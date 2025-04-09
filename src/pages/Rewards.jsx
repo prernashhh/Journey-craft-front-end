@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, Star } from 'lucide-react';
-import axios from 'axios';
+import api from '../config/api'; // Import the API client
 import Navbar from '../components/Navbar';
 import PageTitle from '../components/PageTitle';
 import './Rewards.css';
@@ -14,12 +14,9 @@ function Rewards() {
     const fetchRewards = async () => {
       try {
         setLoading(true);
-        const token = localStorage.getItem('token');
         
         try {
-          const response = await axios.get('http://localhost:5000/api/rewards', {
-            headers: { Authorization: `Bearer ${token}` }
-          });
+          const response = await api.get('/api/rewards');
           setRewards(response.data);
         } catch (err) {
           // If the API returns 404, it means the endpoint doesn't exist yet

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Search, MapPin, Calendar, Star } from "lucide-react";
-import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import './Trips.css';
 import ItineraryDetailsModal from '../components/ItineraryDetailsModal';
 import Navbar from '../components/Navbar';
-import { useNavigate } from 'react-router-dom';
+import api from '../config/api'; // Import the API client
 
 function Trips() {
   const [itineraries, setItineraries] = useState([]);
@@ -18,10 +18,7 @@ function Trips() {
   useEffect(() => {
     const fetchItineraries = async () => {
       try {
-        const token = localStorage.getItem('token');
-        const response = await axios.get('http://localhost:5000/api/itineraries', {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+        const response = await api.get('/api/itineraries');
         setItineraries(response.data);
         setFilteredItineraries(response.data);
         setLoading(false);

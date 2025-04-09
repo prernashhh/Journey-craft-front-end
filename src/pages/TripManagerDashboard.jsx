@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import './TripManagerDashboard.css';
+import api from '../config/api'; // Import the API client
 
 function TripManagerDashboard() {
   const { user, isAuthenticated } = useAuth();
@@ -15,7 +15,7 @@ function TripManagerDashboard() {
   useEffect(() => {
     // Redirect if user is not authenticated or not a trip manager
     if (!isAuthenticated) {
-      navigate('/login');
+      navigate('/');
       return;
     }
 
@@ -28,15 +28,11 @@ function TripManagerDashboard() {
     const fetchTrips = async () => {
       try {
         setLoading(true);
-        const token = localStorage.getItem('token');
-        const response = await axios.get(
-          'http://localhost:5000/api/itineraries/my-itineraries',
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
+        const response = await api.get('/api/itineraries/my-itineraries');
         setTrips(response.data);
       } catch (err) {
-        setError('Failed to load trips. Please try again later.');
         console.error('Error fetching trips:', err);
+        setError('Failed to load trips. Please try again later.');
       } finally {
         setLoading(false);
       }
