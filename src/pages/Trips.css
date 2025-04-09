@@ -1,0 +1,202 @@
+.trips-page {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.trips-header {
+  margin-bottom: 2rem;
+}
+
+.trips-header h1 {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin-bottom: 1.5rem;
+}
+
+.search-create-container {
+  display: flex;
+  align-items: center;
+  gap: 25rem; /* Adds spacing between search bar and button */
+}
+
+.search-container {
+  flex: 1; /* Expands to take available space */
+}
+
+.create-trip-btn {
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  background-color: #0284c7;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.create-trip-btn:hover {
+  background-color: #0369a1;
+}
+
+
+.search-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #64748b;
+}
+
+.search-input {
+  width: 100%;
+  padding: 1rem 1rem 1rem 3rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  background: white;
+  transition: border-color 0.2s;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #0284c7;
+}
+
+.itineraries-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.itinerary-card {
+  background: white;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+}
+
+.itinerary-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.itinerary-details {
+  padding: 1.5rem;
+}
+
+.itinerary-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin-bottom: 1rem;
+}
+
+.itinerary-meta {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+  color: #64748b;
+}
+
+.itinerary-meta span {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.destinations {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.destination-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.75rem;
+  background: #f1f5f9;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  color: #475569;
+}
+
+.itinerary-description {
+  font-size: 0.875rem;
+  color: #64748b;
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+.itinerary-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+.price {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.status-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.status-badge.draft {
+  background: #f1f5f9;
+  color: #64748b;
+}
+
+.status-badge.confirmed {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.status-badge.completed {
+  background: #e0f2fe;
+  color: #0284c7;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+  font-size: 1.125rem;
+  color: #64748b;
+}
+
+.error {
+  color: #dc2626;
+  text-align: center;
+  padding: 2rem;
+}
+
+@media (max-width: 768px) {
+  .trips-page {
+    padding: 1rem;
+  }
+
+  .itineraries-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .trips-header h1 {
+    font-size: 1.5rem;
+  }
+}

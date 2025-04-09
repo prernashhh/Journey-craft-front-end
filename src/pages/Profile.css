@@ -1,0 +1,724 @@
+.profile-page {
+  min-height: 100vh;
+  background-color: #f8fafc;
+  padding-bottom: 2rem;
+}
+
+.profile-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+/* Profile Header */
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background-color: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.profile-avatar {
+  flex-shrink: 0;
+}
+
+.avatar-placeholder {
+  width: 120px;
+  height: 120px;
+  background-color: #0284c7;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  font-weight: 600;
+  color: white;
+  box-shadow: 0 4px 6px rgba(2, 132, 199, 0.25);
+  transition: transform 0.2s;
+}
+
+.avatar-placeholder:hover {
+  transform: scale(1.05);
+}
+
+.profile-title h1 {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin-bottom: 0.75rem;
+}
+
+.profile-title p {
+  color: #64748b;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+.profile-stats {
+  display: flex;
+  gap: 2rem;
+  margin-top: 0.75rem;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #f1f5f9;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  transition: transform 0.2s, background-color 0.2s;
+}
+
+.stat:hover {
+  background-color: #e2e8f0;
+  transform: translateY(-2px);
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #0284c7;
+}
+
+.stat-label {
+  font-size: 0.875rem;
+  color: #64748b;
+}
+
+/* Tabs */
+.profile-tabs {
+  display: flex;
+  border-bottom: 1px solid #e2e8f0;
+  margin-bottom: 2rem;
+  overflow-x: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+.profile-tabs::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+.tab-button {
+  padding: 0.75rem 1.5rem;
+  background: none;
+  border: none;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #64748b;
+  cursor: pointer;
+  position: relative;
+  white-space: nowrap;
+  transition: color 0.2s;
+}
+
+.tab-button.active {
+  color: #0284c7;
+}
+
+.tab-button.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: #0284c7;
+  border-radius: 2px;
+}
+
+.tab-button:hover:not(.active) {
+  color: #334155;
+}
+
+/* Profile Content */
+.profile-content, 
+.wishlist-content,
+.connections-content {
+  background: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0.8; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.profile-section {
+  margin-bottom: 2rem;
+}
+
+.profile-section h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.profile-section h2 svg {
+  color: #0284c7;
+}
+
+.profile-fields {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.field-group label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #64748b;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.field-group p {
+  color: #0f172a;
+  font-size: 1rem;
+  padding: 0.75rem;
+  background-color: #f8fafc;
+  border-radius: 0.375rem;
+  border: 1px solid transparent;
+}
+
+.field-group input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.375rem;
+  font-size: 1rem;
+  transition: all 0.2s;
+}
+
+.field-group input:focus {
+  outline: none;
+  border-color: #0284c7;
+  box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.2);
+}
+
+/* Profile Actions */
+.profile-actions {
+  display: flex;
+  gap: 1rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e2e8f0;
+  flex-wrap: wrap;
+}
+
+.edit-button,
+.save-button,
+.cancel-button,
+.logout-button {
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.edit-button {
+  background-color: #0284c7;
+  color: white;
+  border: none;
+}
+
+.edit-button:hover {
+  background-color: #0369a1;
+  transform: translateY(-1px);
+}
+
+.save-button {
+  background-color: #16a34a;
+  color: white;
+  border: none;
+}
+
+.save-button:hover {
+  background-color: #15803d;
+  transform: translateY(-1px);
+}
+
+.cancel-button {
+  background-color: #f1f5f9;
+  color: #64748b;
+  border: none;
+}
+
+.cancel-button:hover {
+  background-color: #e2e8f0;
+}
+
+.logout-button {
+  margin-left: auto;
+  background-color: #ef4444;
+  color: white;
+  border: none;
+}
+
+.logout-button:hover {
+  background-color: #dc2626;
+}
+
+.error-message {
+  background-color: #fee2e2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Wishlist */
+.wishlist-content {
+  margin-top: 1rem;
+}
+
+.wishlist-section {
+  background: white;
+  border-radius: 0.5rem;
+  padding: 1.5rem 0;
+  margin-bottom: 2rem;
+}
+
+.wishlist-section:last-child {
+  margin-bottom: 0;
+}
+
+.wishlist-section h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin-bottom: 1.5rem;
+  padding: 0 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.wishlist-section h2 svg {
+  color: #0284c7;
+}
+
+.no-items-message {
+  text-align: center;
+  color: #64748b;
+  padding: 2rem;
+  background-color: #f8fafc;
+  border-radius: 0.5rem;
+  margin: 0 1.5rem;
+  border: 1px dashed #cbd5e1;
+}
+
+.wishlist-loading {
+  text-align: center;
+  padding: 2rem;
+  color: #64748b;
+}
+
+.wishlist-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  padding: 0 1.5rem;
+}
+
+.wishlist-card {
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  background: white;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.wishlist-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.wishlist-card-header {
+  height: 140px;
+  overflow: hidden;
+  position: relative;
+  background-color: #f1f5f9;
+}
+
+.wishlist-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.wishlist-card:hover .wishlist-image {
+  transform: scale(1.05);
+}
+
+.wishlist-card-body {
+  padding: 1.25rem;
+}
+
+.wishlist-item-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin-bottom: 0.75rem;
+  line-height: 1.3;
+}
+
+.wishlist-item-location,
+.wishlist-item-date {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: #64748b;
+  margin-bottom: 0.5rem;
+}
+
+.wishlist-item-details {
+  font-size: 0.875rem;
+  color: #64748b;
+  margin-bottom: 1rem;
+}
+
+.wishlist-item-duration {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.wishlist-item-destinations {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.wishlist-destination {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.75rem;
+  background: #f1f5f9;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  color: #475569;
+}
+
+.wishlist-more {
+  font-size: 0.875rem;
+  color: #0284c7;
+  cursor: pointer;
+}
+
+.wishlist-more:hover {
+  text-decoration: underline;
+}
+
+.wishlist-price {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin-bottom: 0.5rem;
+}
+
+.wishlist-organizer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: #64748b;
+  margin-bottom: 1rem;
+}
+
+.wishlist-card-actions {
+  display: flex;
+  gap: 0.75rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+.wishlist-view-button,
+.wishlist-remove-button {
+  flex: 1;
+  padding: 0.75rem 0;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.wishlist-view-button {
+  background-color: #0284c7;
+  color: white;
+  border: none;
+}
+
+.wishlist-view-button:hover {
+  background-color: #0369a1;
+}
+
+.wishlist-remove-button {
+  background-color: #ef4444;
+  color: white;
+  border: none;
+}
+
+.wishlist-remove-button:hover {
+  background-color: #dc2626;
+}
+
+/* Connections */
+.connections-section {
+  margin-bottom: 2rem;
+}
+
+.connections-section h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.connections-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.connection-card {
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background-color: white;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.connection-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.connection-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: #0284c7;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.connection-details {
+  flex: 1;
+}
+
+.connection-name {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin-bottom: 0.25rem;
+}
+
+.connection-role {
+  display: inline-block;
+  font-size: 0.75rem;
+  padding: 0.2rem 0.5rem;
+  background-color: #f1f5f9;
+  color: #64748b;
+  border-radius: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.connection-email {
+  font-size: 0.875rem;
+  color: #64748b;
+}
+
+.follow-button,
+.unfollow-button {
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+}
+
+.follow-button {
+  background-color: #0284c7;
+  color: white;
+  border: none;
+}
+
+.follow-button:hover {
+  background-color: #0369a1;
+}
+
+.unfollow-button {
+  background-color: #f1f5f9;
+  color: #64748b;
+  border: none;
+}
+
+.unfollow-button:hover {
+  background-color: #ef4444;
+  color: white;
+}
+
+/* Loading States */
+.loading {
+  text-align: center;
+  padding: 2rem;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .profile-container {
+    padding: 1.5rem 1rem;
+  }
+  
+  .profile-header {
+    flex-direction: column;
+    text-align: center;
+    padding: 1.5rem 1rem;
+  }
+  
+  .profile-stats {
+    justify-content: center;
+  }
+  
+  .profile-content, 
+  .wishlist-content,
+  .connections-content {
+    padding: 1.5rem;
+  }
+  
+  .wishlist-grid,
+  .connections-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .tab-button {
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+  }
+  
+  .profile-actions {
+    flex-direction: column;
+  }
+  
+  .logout-button {
+    margin-left: 0;
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .edit-button,
+  .save-button,
+  .cancel-button {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .connection-card {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .wishlist-card-actions {
+    flex-direction: column;
+  }
+  
+  .wishlist-view-button,
+  .wishlist-remove-button {
+    width: 100%;
+  }
+  
+  .profile-section h2,
+  .wishlist-section h2,
+  .connections-section h2 {
+    font-size: 1.125rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .avatar-placeholder {
+    width: 80px;
+    height: 80px;
+    font-size: 2rem;
+  }
+  
+  .profile-title h1 {
+    font-size: 1.5rem;
+  }
+  
+  .profile-title p {
+    font-size: 0.875rem;
+  }
+  
+  .stat {
+    padding: 0.5rem 1rem;
+  }
+  
+  .stat-value {
+    font-size: 1.25rem;
+  }
+  
+  .field-group label,
+  .field-group p {
+    font-size: 0.875rem;
+  }
+}
