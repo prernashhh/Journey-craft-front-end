@@ -1,0 +1,436 @@
+.custom-itinerary-container {
+  max-width: 1200px;
+  margin: 0rem auto;
+  padding: 0rem;
+}
+
+.progress-steps {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+
+.step-number {
+  width: 40px;
+  height: 40px;
+  border-radius: 40%;
+  background-color: #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.step.active .step-number {
+  background-color: #1E3A8A;
+  color: white;
+}
+
+.step.completed .step-number {
+  background-color: #22c55e;
+  color: white;
+}
+
+.step-label {
+  font-size: 0.875rem;
+  color: #64748b;
+}
+
+.form-content {
+  background-color: white;
+  border-radius: 1rem;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.navigation-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.back-button,
+.next-button,
+.submit-button {
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.back-button {
+  background-color: #f1f5f9;
+  color: #64748b;
+  border: none;
+}
+
+.next-button,
+.submit-button {
+  background-color: #1E3A8A;
+  color: white;
+  border: none;
+}
+
+.next-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.confirmation-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 1rem;
+  max-width: 500px;
+  text-align: center;
+}
+
+.modal-content h2 {
+  color: #1E3A8A;
+  margin-bottom: 1rem;
+}
+
+.modal-content button {
+  margin-top: 1.5rem;
+  padding: 0.75rem 2rem;
+  background-color: #1E3A8A;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.modal-content button:hover {
+  background-color: #1e40af;
+}
+
+.step-content {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.step-content h2 {
+  font-size: 1.5rem;
+  color: #1E3A8A;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.step-description {
+  text-align: center;
+  color: #64748b;
+  margin-bottom: 0.5rem;
+}
+
+.input-group {
+  margin-bottom: 0.5rem;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  color: #64748b;
+}
+
+.destination-input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+}
+
+.selection-preview {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  background-color: #f8fafc;
+  border-radius: 0.5rem;
+  margin-top: 1rem;
+}
+
+.date-inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.preferences-section {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.preference-group h3 {
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  color: #0f172a;
+}
+
+.radio-group, .checkbox-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.radio-label, .checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.radio-label:hover, .checkbox-label:hover {
+  background-color: #f8fafc;
+}
+
+.selection-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.selection-section h3 {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  color: #1E3A8A;
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.selection-card {
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.selection-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.selection-card.selected {
+  border-color: #1E3A8A;
+  box-shadow: 0 0 0 2px #1E3A8A;
+}
+
+.selection-card img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+}
+
+.card-content {
+  padding: 1rem;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  background-color: #f1f5f9;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+.price {
+  margin-top: 0.5rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.review-section {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.review-item {
+  background-color: #f8fafc;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+}
+
+.review-item h3 {
+  color: #1E3A8A;
+  margin-bottom: 1rem;
+}
+
+.popular-places-section {
+  margin-top: 2rem;
+  background-color: #f8fafc;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+}
+
+.popular-places-section h3 {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #1E3A8A;
+  margin-bottom: 0.5rem;
+}
+
+.section-description {
+  color: #64748b;
+  margin-bottom: 1.5rem;
+}
+
+.popular-places-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.25rem;
+}
+
+.popular-place-card {
+  background-color: white;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.popular-place-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.popular-place-card.selected {
+  border: 2px solid #1E3A8A;
+}
+
+.place-image-container {
+  position: relative;
+  height: 180px;
+  overflow: hidden;
+}
+
+.place-image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.popular-place-card:hover .place-image-container img {
+  transform: scale(1.05);
+}
+
+.selected-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
+
+.place-details {
+  padding: 1rem;
+}
+
+.place-details h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin-bottom: 0.5rem;
+}
+
+.place-details p {
+  font-size: 0.875rem;
+  color: #64748b;
+  line-height: 1.4;
+}
+
+.event-date {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #64748b;
+  margin-top: 6px;
+  font-size: 0.875rem;
+}
+
+.duration {
+  color: #64748b;
+  font-size: 0.875rem;
+  margin-top: 6px;
+  margin-bottom: 6px;
+}
+
+.notes-section {
+  margin-top: 2rem;
+}
+
+.notes-input {
+  width: 100%;
+  padding: 0.875rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  resize: vertical;
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1.5;
+  margin-top: 0.5rem;
+}
+
+.notes-input:focus {
+  outline: none;
+  border-color: #1E3A8A;
+  box-shadow: 0 0 0 2px rgba(30, 58, 138, 0.1);
+}
+
+@media (max-width: 640px) {
+  .popular-places-grid {
+    grid-template-columns: 1fr;
+  }
+}

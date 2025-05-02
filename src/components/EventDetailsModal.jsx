@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { X, Calendar, MapPin, Clock, Users, Tag, Heart, Share2, ArrowRight } from 'lucide-react';
-import api from '../config/api.js'; // Import the API client
-import './EventDetailsModal.css';
+import { X, Calendar, MapPin, Clock, Users, Tag, Heart } from "lucide-react";
+import "./EventDetailsModal.css";
+import React, { useState, useEffect } from "react";
 import PaymentModal from './PaymentModal';
+import api from '../config/api'; // Import the API client instead of axios
 
 function EventDetailsModal({ event, onClose }) {
   const [showPayment, setShowPayment] = useState(false);
@@ -13,10 +13,8 @@ function EventDetailsModal({ event, onClose }) {
     const checkWishlistStatus = async () => {
       try {
         if (!event?._id) return;
-
-        const token = localStorage.getItem('token');
-        if (!token) return;
-
+        
+        // Use the api client
         const response = await api.get(`/api/wishlist/check/event/${event._id}`);
         setIsInWishlist(response.data.inWishlist);
       } catch (error) {
@@ -38,12 +36,7 @@ function EventDetailsModal({ event, onClose }) {
   const toggleWishlist = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem('token');
-      if (!token) {
-        alert('Please login to add to wishlist');
-        return;
-      }
-
+      
       if (isInWishlist) {
         await api.delete(`/api/wishlist/events/${event._id}`);
       } else {

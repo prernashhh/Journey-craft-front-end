@@ -1,0 +1,142 @@
+.travel-page {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #ffffff;
+    color: #1E3A8A;
+}
+  
+.travel-banner {
+    min-height: 100vh;
+    margin-top: -100px; /* Offset navbar height */
+    padding-top: 0px; /* Prevent content from going under navbar */
+    position: relative;
+    height: 600px;
+    overflow: hidden;
+}
+  
+.travel-banner-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+}
+  
+.travel-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.7));
+    z-index: 2;
+}
+  
+.travel-banner-content {
+    position: relative;
+    z-index: 3;
+    text-align: center;
+    color: white;
+    padding: 2rem;
+    max-width: 800px;
+    margin: 0 auto;
+    padding-top: 100px; /* Adjust content position */
+}
+  
+.travel-banner-content h1 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+}
+  
+.travel-banner-content h1 span {
+    color: #FFC857;
+}
+  
+.travel-banner-content p {
+    font-size: 1.25rem;
+    margin-bottom: 2rem;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
+}
+  
+.search-section {
+    position: relative;
+    z-index: 4;
+    max-width: 1000px;
+    margin: -350px auto 0;
+    padding: 0 20px 60px;
+}
+  
+.tabs {
+    display: flex;
+    justify-content: center;
+    background: #fff;
+    border-radius: 10px 10px 0 0;
+    gap: 1rem;
+    padding: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+  
+.tab-button {
+    background: none;
+    border: none;
+    outline: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+  
+.tab-button:hover {
+    transform: scale(1.05);
+}
+  
+.tab-button .icon-wrapper {
+    background-color: #FFF5E1;
+    padding: 10px;
+    border-radius: 50%;
+    margin-bottom: 5px;
+    transition: background 0.3s;
+}
+  
+.tab-button.active .icon-wrapper,
+.tab-button:hover .icon-wrapper {
+    background-color: #FFC857;
+}
+  
+.search-box {
+    background-color: #fff;
+    padding: 2px;
+    border-radius: 0 0 10px 10px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .travel-banner-content h1 {
+        font-size: 2.5rem;
+    }
+
+    .travel-banner-content p {
+        font-size: 1rem;
+    }
+
+    .search-section {
+        margin-top: -250px;
+    }
+}
+
+@media (max-width: 480px) {
+    .travel-banner-content h1 {
+        font-size: 2rem;
+    }
+
+    .search-section {
+        margin-top: -200px;
+    }
+}

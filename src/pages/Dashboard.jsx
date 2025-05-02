@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Search, MessageSquare, Calendar, MapPin, Clock } from "lucide-react";
-import api from '../config/api'; // Import the API client
+import axios from 'axios';
 import './Dashboard.css';
 import EventDetailsModal from '../components/EventDetailsModal';
 import ItineraryDetailsModal from '../components/ItineraryDetailsModal';
 import Navbar from '../components/Navbar';
+import TravelBooking from './TravelBooking'; // Add this import
+import { ItineraryCard } from "../components/itinerary-card";
 
 function Dashboard() {
   const { user, logout } = useAuth();
@@ -19,34 +21,67 @@ function Dashboard() {
   const [selectedItinerary, setSelectedItinerary] = useState(null);
 
   useEffect(() => {
+    // Check for user and token first
     if (!user) {
-      navigate('/');
+      navigate('/login');
       return;
     }
 
     const fetchData = async () => {
       try {
+        const token = localStorage.getItem('token');
+        
+        // Check if token exists
+        if (!token) {
+          logout(); // Call logout to clear auth context
+          navigate('/login');
+          return;
+        }
+
+        const headers = { 
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        };
+
+        console.log('Attempting to connect to backend...');
+        
+        // Try with a timeout to avoid long waiting periods
         const [eventsRes, itinerariesRes] = await Promise.all([
-          api.get('/api/events'),
-          api.get('/api/itineraries')
+          axios.get('https://journety-craft-backend.onrender.com/api/events', { 
+            headers,
+            timeout: 5000 // 5 second timeout
+          }),
+          axios.get('https://journety-craft-backend.onrender.com/api/itineraries', { 
+            headers,
+            timeout: 5000 // 5 second timeout
+          })
         ]);
 
+        console.log('Successfully connected to backend');
         setEvents(eventsRes.data);
         setItineraries(itinerariesRes.data);
+        setError(null);
+
       } catch (err) {
         console.error('Error fetching data:', err);
-        setError('Failed to load data');
+        
+        // Provide more specific error message based on error type
+        if (err.code === 'ERR_NETWORK' || err.code === 'ECONNREFUSED') {
+          setError('Cannot connect to the server. Please ensure the backend server is running.');
+        } else if (err.response?.status === 401) {
+          setError('Session expired. Please login again.');
+          logout();
+          navigate('/login');
+        } else {
+          setError('Failed to load dashboard data. Please try again.');
+        }
       } finally {
         setLoading(false);
       }
     };
 
     fetchData();
-  }, [user, navigate]);
-
-  const handleCreateTrip = () => {
-    navigate('/create-trip');
-  };
+  }, [user, navigate, logout]);
 
   if (loading) return <div className="loading">Loading...</div>;
   if (error) return <div className="error">{error}</div>;
@@ -54,18 +89,10 @@ function Dashboard() {
   return (
     <div className="dashboard">
       <Navbar />
-      <div className="navbar-spacer"></div> {/* Add this spacer */}
       
       <main className="dashboard-content">
-        <section className="welcome-section">
-          <h1>Welcome, {user?.name}</h1>
-          <p><br/></p>
-          <button 
-            className="create-trip-btn"
-            onClick={handleCreateTrip}
-          >
-            Create Trip
-          </button>
+        <section className="booking-section">
+          <TravelBooking />
         </section>
 
         <section id="events" className="dashboard-section">
@@ -105,37 +132,30 @@ function Dashboard() {
 
         <section id="itineraries" className="dashboard-section">
           <h2>Your Itineraries</h2>
-          <div className="itineraries-grid">
-            {itineraries.map(itinerary => (
-              <div 
-                key={itinerary._id} 
-                className="itinerary-card"
-                onClick={() => setSelectedItinerary(itinerary)}
-              >
-                <div className="itinerary-details">
-                  <h3>{itinerary.title}</h3>
-                  <p className="itinerary-description">{itinerary.description}</p>
-                  <div className="itinerary-info">
-                    <div className="itinerary-stats">
-                      <span>{itinerary.days} Days</span>
-                      <span>{itinerary.nights} Nights</span>
-                      <span>₹{itinerary.price}</span>
-                    </div>
-                    <div className="itinerary-destinations">
-                      {itinerary.destinations.map((dest, index) => (
-                        <span key={index} className="destination-tag">
-                          <MapPin size={14} /> {dest.location}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="itinerary-status">
-                    Status: {itinerary.status}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+          
+          {itineraries.length === 0 ? (
+            <div className="no-data">
+              <p>You haven't booked any itineraries yet.</p>
+              <button onClick={() => navigate('/trips')}>Browse Itineraries</button>
+            </div>
+          ) : (
+            <div className="itineraries-grid">
+              {itineraries.map(itinerary => (
+                <ItineraryCard 
+                  key={itinerary._id}
+                  title={itinerary.title}
+                  destination={itinerary.destination}
+                  duration={`${itinerary.days} Days / ${itinerary.nights} Nights`}
+                  price={itinerary.price}
+                  rating={4.5}
+                  image={itinerary.image || "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?q=80&w=1470&auto=format&fit=crop"}
+                  highlights={itinerary.destinations.map(dest => dest.location)}
+                  included={["Hotels", "Sightseeing", "Some meals"]}
+                  itineraryId={itinerary._id}
+                />
+              ))}
+            </div>
+          )}
         </section>
       </main>
       {selectedEvent && (

@@ -1,0 +1,83 @@
+/* Loading state styling */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  text-align: center;
+  color: #64748b;
+  min-height: 300px;
+  background-color: #f8fafc;
+  border-radius: 0.75rem;
+  margin-top: 1rem;
+}
+
+.loading-container .animate-spin {
+  animation: spin 1.5s linear infinite;
+  margin-bottom: 1rem;
+  color: #0284c7;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-container p {
+  font-size: 1.125rem;
+  font-weight: 500;
+  margin-top: 0.5rem;
+}
+
+/* Empty state styling */
+.no-results {
+  text-align: center;
+  padding: 3rem;
+  background-color: #f8fafc;
+  border-radius: 0.75rem;
+  color: #64748b;
+  margin-top: 1rem;
+  border: 1px dashed #cbd5e1;
+}
+
+.no-results p {
+  font-size: 1.125rem;
+  margin-bottom: 1rem;
+}
+
+/* Error state styling */
+.error-message {
+  text-align: center;
+  padding: 2rem;
+  background-color: #fee2e2;
+  border-radius: 0.75rem;
+  color: #ef4444;
+  border: 1px solid #fca5a5;
+  margin-top: 1rem;
+}
+
+/* Results grid styling */
+.itinerary-results-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 2rem;
+  margin-top: 1.5rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .itinerary-results-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .loading-container,
+  .no-results,
+  .error-message {
+    padding: 2rem 1rem;
+  }
+}

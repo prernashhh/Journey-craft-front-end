@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import Navbar from '../components/Navbar';
 import './TripDetail.css';
-import api from '../config/api'; // Import the API client
 
 function TripDetail() {
   const { id } = useParams();
@@ -14,7 +14,10 @@ function TripDetail() {
   useEffect(() => {
     const fetchTripDetails = async () => {
       try {
-        const response = await api.get(`/api/itineraries/${id}`);
+        const token = localStorage.getItem('token');
+        const response = await axios.get(`https://journety-craft-backend.onrender.com/api/itineraries/${id}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
         setTrip(response.data);
         setLoading(false);
       } catch (err) {

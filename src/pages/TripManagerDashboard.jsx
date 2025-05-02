@@ -15,7 +15,7 @@ function TripManagerDashboard() {
   useEffect(() => {
     // Redirect if user is not authenticated or not a trip manager
     if (!isAuthenticated) {
-      navigate('/');
+      navigate('/login');
       return;
     }
 
@@ -28,6 +28,7 @@ function TripManagerDashboard() {
     const fetchTrips = async () => {
       try {
         setLoading(true);
+        // Use the api client instead of direct axios call
         const response = await api.get('/api/itineraries/my-itineraries');
         setTrips(response.data);
       } catch (err) {

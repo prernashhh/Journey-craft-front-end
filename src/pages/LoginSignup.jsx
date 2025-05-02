@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { Mail, User, Lock } from "lucide-react";
+import { AlertCircle, LogIn, UserPlus } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from "../context/AuthContext";
-import api from '../config/api.js';
+import axios from "axios";
 import "./LoginSignup.css";
 
 function LoginSignup({ onClose }) {
@@ -16,7 +16,7 @@ function LoginSignup({ onClose }) {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { login, signup, googleLogin } = useAuth(); // Add googleLogin here
+  const { login, signup, googleLogin } = useAuth();
 
   const handleChange = (e) => {
     setFormData({
@@ -38,22 +38,27 @@ function LoginSignup({ onClose }) {
         password: formData.password,
         role: formData.role || 'traveller'
       };
-      
+
       if (isLogin) {
-        const response = await api.post('/api/auth/login', {
+        const response = await axios.post('https://journety-craft-backend.onrender.com/api/auth/login', {
           email: formData.email,
           password: formData.password
         });
         const { token, user } = response.data;
-        localStorage.setItem('token', token);
-        localStorage.setItem('user', JSON.stringify(user));
+        
+        // Use the login function from context instead of just setting localStorage
+        login(user, token);
+        
+        onClose();
         navigate('/dashboard');
       } else {
-        const response = await api.post('/api/auth/register', registerData);
+        const response = await axios.post('https://journety-craft-backend.onrender.com/api/auth/register', registerData);
         const { token, user } = response.data.data;
-        localStorage.setItem('token', token);
-        localStorage.setItem('user', JSON.stringify(user));
         
+        // Use the login function from context
+        login(user, token);
+        
+        onClose();
         // Only navigate to interests page if user is a traveller
         if (registerData.role === 'traveller') {
           navigate('/interests');
@@ -61,7 +66,6 @@ function LoginSignup({ onClose }) {
           navigate('/manager-dashboard');
         }
       }
-      onClose();
     } catch (err) {
       console.error('Auth error:', err);
       setError(err.response?.data?.error || "Authentication failed");
@@ -75,32 +79,22 @@ function LoginSignup({ onClose }) {
       setLoading(true);
       setError("");
       
-      // Sign in with Google popup
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
       
-      // Send user data to backend
-      const response = await api.post('/api/auth/google', {
+      const response = await axios.post('https://journety-craft-backend.onrender.com/api/auth/google', {
         name: user.displayName,
         email: user.email,
         uid: user.uid,
         photoURL: user.photoURL,
-        role: formData.role || 'traveller' // Include selected role if they're signing up
+        role: formData.role || 'traveller'
       });
       
-      // Handle authentication response from backend
-      const { token } = response.data;
+      // Use the login function from context
+      login(response.data.user, response.data.token);
       
-      // Store user data and token
-      localStorage.setItem('user', JSON.stringify(response.data.user));
-      localStorage.setItem('token', token);
-      
-      // Update authentication context using the dedicated method
-      await googleLogin(response.data.user, token);
-      
-      // Close modal and navigate
       onClose();
-      // Navigate based on role
+      
       if (response.data.user.role === 'trip_manager') {
         navigate('/manager-dashboard');
       } else {
@@ -116,89 +110,121 @@ function LoginSignup({ onClose }) {
 
   return (
     <div className="login-signup-container">
-      <div className="login-signup-card">
+      <div className={`login-signup-card ${!isLogin ? 'signup-card' : ''}`}>
         <button className="close-button" onClick={onClose}>×</button>
         
-        <h2 className="form-title">{isLogin ? "Login" : "Sign Up"}</h2>
+        <h2 className="form-title">
+          {isLogin ? 
+            <span>Welcome Back</span> : 
+            <span>Create Account</span>
+          }
+        </h2>
         
         {error && (
           <div className="error-alert">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="12" cy="12" r="10"></circle>
-              <line x1="12" y1="8" x2="12" y2="12"></line>
-              <line x1="12" y1="16" x2="12.01" y2="16"></line>
-            </svg>
+            <AlertCircle size={18} />
             {error}
           </div>
         )}
         
         <form className="auth-form" onSubmit={handleSubmit}>
-          {!isLogin && (
-            <div className="form-group">
-              <label htmlFor="name">Full Name</label>
-              <div className="input-with-icon">
-                <User size={16} className="input-icon" />
+          {isLogin ? (
+            // Login form (vertical layout)
+            <>
+              <div className="form-group">
+                <label htmlFor="email">Email Address</label>
                 <input 
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={formData.name}
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={formData.email}
                   onChange={handleChange}
-                  placeholder="Enter your full name"
+                  placeholder="Enter your email"
                   required
-                  minLength={2}
                 />
               </div>
-            </div>
+              
+              <div className="form-group">
+                <label htmlFor="password">Password</label>
+                <input 
+                  type="password"
+                  id="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  placeholder="Enter your password"
+                  required
+                  minLength={6}
+                />
+              </div>
+            </>
+          ) : (
+            // Signup form (horizontal layout)
+            <>
+              <div className="form-row signup-form-row">
+                <div className="form-group">
+                  <label htmlFor="name">Full Name</label>
+                  <input 
+                    type="text"
+                    id="name"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    placeholder="Enter your full name"
+                    required
+                    minLength={2}
+                  />
+                </div>
+                
+                <div className="form-group">
+                  <label htmlFor="email">Email Address</label>
+                  <input 
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder="Enter your email"
+                    required
+                  />
+                </div>
+              </div>
+              
+              <div className="form-row signup-form-row">
+                <div className="form-group">
+                  <label htmlFor="password">Password</label>
+                  <input 
+                    type="password"
+                    id="password"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    placeholder="Enter your password"
+                    required
+                    minLength={6}
+                  />
+                </div>
+                
+                <div className="form-group">
+                  <label htmlFor="role">Account Type</label>
+                  <select 
+                    id="role" 
+                    name="role"
+                    value={formData.role || 'traveller'} 
+                    onChange={handleChange}
+                    className="form-control"
+                  >
+                    <option value="traveller">Traveller</option>
+                    <option value="trip_manager">Trip Manager</option>
+                  </select>
+                </div>
+              </div>
+            </>
           )}
-          
-          <div className="form-group">
-            <label htmlFor="email">Email</label>
-            <div className="input-with-icon">
-              <Mail size={16} className="input-icon" />
-              <input 
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                placeholder="Enter your email"
-                required
-              />
-            </div>
-          </div>
-          
-          <div className="form-group">
-            <label htmlFor="password">Password</label>
-            <div className="input-with-icon">
-              <Lock size={16} className="input-icon" />
-              <input 
-                type="password"
-                id="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                placeholder="Enter your password"
-                required
-                minLength={6}
-              />
-            </div>
-          </div>
 
-          {!isLogin && (
-            <div className="form-group">
-              <label htmlFor="role">Account Type:</label>
-              <select 
-                id="role" 
-                value={formData.role || 'traveller'} 
-                onChange={(e) => 
-                  setFormData({...formData, role: e.target.value})
-                }
-                className="form-control"
-              >
-                <option value="traveller">Traveller</option>
-                <option value="trip_manager">Trip Manager</option>
-              </select>
+          {isLogin && (
+            <div className="forgot-password">
+              <a href="#">Forgot password?</a>
             </div>
           )}
           
@@ -207,7 +233,16 @@ function LoginSignup({ onClose }) {
             className="auth-button"
             disabled={loading}
           >
-            {loading ? "Processing..." : (isLogin ? "Login" : "Sign Up")}
+            {loading ? "Processing..." : (isLogin ? 
+              <div className="google-button-container">
+                <LogIn size={18} />
+                <span>Login</span>
+              </div> : 
+              <div className="google-button-container">
+                <UserPlus size={18} />
+                <span>Sign Up</span>
+              </div>
+            )}
           </button>
         </form>
         
@@ -221,7 +256,7 @@ function LoginSignup({ onClose }) {
           disabled={loading}
         >
           <div className="google-button-container">
-            <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+            <svg width="20" height="20" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
               <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z" />
               <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 009 18z" />
               <path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 013.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 000 9c0 1.452.348 2.827.957 4.042l3.007-2.332z" />
@@ -240,7 +275,7 @@ function LoginSignup({ onClose }) {
               onClick={() => {
                 setIsLogin(!isLogin);
                 setError('');
-                setFormData({ name: '', email: '', password: '' });
+                setFormData({ name: '', email: '', password: '', role: 'traveller' });
               }}
             >
               {isLogin ? "Sign Up" : "Login"}

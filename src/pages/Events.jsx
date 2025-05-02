@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Calendar, MapPin, Clock, Tag } from "lucide-react";
-import api from '../config/api.js';
+import axios from 'axios';  // Import axios directly
 import './Events.css';
 import EventDetailsModal from '../components/EventDetailsModal';
 import Navbar from '../components/Navbar';
@@ -16,9 +16,65 @@ function Events() {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await api.get('/api/events');
-        setEvents(response.data);
-        setFilteredEvents(response.data);
+        // Check if we're in development mode and use mock data if API is not ready
+        const isDev = import.meta.env.MODE === 'development';
+        
+        if (isDev) {
+          // Use mock data for development
+          console.log('Using mock events data in development mode');
+          const mockEvents = [
+            {
+              _id: '1',
+              title: 'Summer Music Festival',
+              date: new Date('2025-07-15').toISOString(),
+              description: 'A vibrant celebration of music from around the world',
+              location: { city: 'Mumbai', country: 'India' },
+              price: { amount: 1500 },
+              category: 'Music'
+            },
+            {
+              _id: '2',
+              title: 'Tech Conference 2025',
+              date: new Date('2025-08-20').toISOString(),
+              description: 'The biggest tech gathering in South Asia',
+              location: { city: 'Bangalore', country: 'India' },
+              price: { amount: 2000 },
+              category: 'Technology'
+            },
+            {
+              _id: '3',
+              title: 'Food & Wine Expo',
+              date: new Date('2025-06-10').toISOString(),
+              description: 'Taste the finest cuisines and wines',
+              location: { city: 'Delhi', country: 'India' },
+              price: { amount: 1000 },
+              category: 'Food'
+            }
+          ];
+          setEvents(mockEvents);
+          setFilteredEvents(mockEvents);
+          setLoading(false);
+          return;
+        }
+        
+        // For production, try to fetch from the API
+        const apiUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+        const response = await axios.get(`${apiUrl}/api/events`);
+        
+        // Process the API response
+        if (response.data && !response.data.includes('<!DOCTYPE html>')) {
+          const eventsData = Array.isArray(response.data) 
+            ? response.data 
+            : (response.data.events || []);
+            
+          setEvents(eventsData);
+          setFilteredEvents(eventsData);
+        } else {
+          console.error('Received HTML instead of JSON from API');
+          setEvents([]);
+          setFilteredEvents([]);
+        }
+        
         setLoading(false);
       } catch (err) {
         console.error('Error fetching events:', err);
@@ -34,96 +90,99 @@ function Events() {
     const query = e.target.value.toLowerCase();
     setSearchQuery(query);
     
-    const filtered = events.filter(event => {
-      const titleMatch = event.title.toLowerCase().includes(query);
-      const locationMatch = event.location && 
-        `${event.location.city}, ${event.location.country}`.toLowerCase().includes(query);
-      const tagsMatch = event.tags?.some(tag => tag.toLowerCase().includes(query));
-      
-      return titleMatch || locationMatch || tagsMatch;
-    });
+    if (!query) {
+      setFilteredEvents(events);
+      return;
+    }
+    
+    const filtered = events.filter(event => 
+      (event.title || event.name || '').toLowerCase().includes(query) ||
+      (event.description || '').toLowerCase().includes(query) ||
+      (event.location?.city || '').toLowerCase().includes(query) ||
+      (event.location?.country || '').toLowerCase().includes(query) ||
+      (event.category || '').toLowerCase().includes(query)
+    );
     
     setFilteredEvents(filtered);
   };
 
-  if (loading) return <div className="loading">Loading events...</div>;
-  if (error) return <div className="error">{error}</div>;
+  const viewEventDetails = (event) => {
+    setSelectedEvent(event);
+  };
 
   return (
-    <div>
+    <div className="events-page">
       <Navbar />
       
-      <div className="events-page">
+      <div className="events-container">
         <div className="events-header">
-          <h1>Upcoming Events</h1>
-          <div className="search-container">
-            <Search className="search-icon" size={20} />
-            <input
-              type="text"
-              placeholder="Search events by title, location, or tags..."
+          <h1>Discover Events</h1>
+          <div className="search-bar">
+            <Search size={18} />
+            <input 
+              type="text" 
+              placeholder="Search events..." 
               value={searchQuery}
               onChange={handleSearch}
-              className="search-input"
             />
           </div>
         </div>
-
-        <div className="events-grid">
-          {filteredEvents.map(event => (
-            <div 
-              key={event._id}
-              className="event-card"
-              onClick={() => setSelectedEvent(event)}
-            >
-              <div className="event-details">
-                <h2 className="event-title">{event.title}</h2>
-                
-                <div className="event-meta">
-                  <span>
-                    <Calendar size={16} />
-                    {new Date(event.date).toLocaleDateString()}
-                  </span>
-                  <span>
-                    <MapPin size={16} />
-                    {event.location.city}, {event.location.country}
-                  </span>
-                  <span>
-                    <Clock size={16} />
-                    {event.duration.hours}h {event.duration.minutes}m
-                  </span>
+        
+        {loading ? (
+          <div className="loading-state">Loading events...</div>
+        ) : error ? (
+          <div className="error-state">{error}</div>
+        ) : filteredEvents.length === 0 ? (
+          <div className="no-results">
+            <p>No events found. Try adjusting your search.</p>
+          </div>
+        ) : (
+          <div className="events-grid">
+            {filteredEvents.map((event) => (
+              <div 
+                key={event._id} 
+                className="event-card"
+                onClick={() => viewEventDetails(event)}
+              >
+                <div className="event-image">
+                  <img src={event.images?.[0]?.url || "https://via.placeholder.com/400x200"} alt={event.title} />
+                  <div className="event-price">₹{event.price?.amount || 'Free'}</div>
                 </div>
-
-                {event.tags && (
-                  <div className="event-tags">
-                    {event.tags.map((tag, index) => (
-                      <span key={index} className="tag">
-                        <Tag size={14} />
-                        {tag}
-                      </span>
-                    ))}
+                <div className="event-details">
+                  <h3 className="event-title">{event.title || event.name}</h3>
+                  <div className="event-meta">
+                    <div className="event-date">
+                      <Calendar size={16} />
+                      {new Date(event.date).toLocaleDateString()}
+                    </div>
+                    <div className="event-location">
+                      <MapPin size={16} />
+                      {event.location?.city}, {event.location?.country}
+                    </div>
+                    {event.duration && (
+                      <div className="event-duration">
+                        <Clock size={16} />
+                        {event.duration}
+                      </div>
+                    )}
+                    {event.category && (
+                      <div className="event-category">
+                        <Tag size={16} />
+                        {event.category}
+                      </div>
+                    )}
                   </div>
-                )}
-
-                <p className="event-description">
-                  {event.description}
-                </p>
-
-                <div className="event-footer">
-                  <span className="price">₹{event.price.amount}</span>
-                  <span className="capacity">
-                    {event.capacity} spots left
-                  </span>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
       
       {selectedEvent && (
-        <EventDetailsModal
-          event={selectedEvent}
-          onClose={() => setSelectedEvent(null)}
+        <EventDetailsModal 
+          event={selectedEvent} 
+          onClose={() => setSelectedEvent(null)} 
         />
       )}
     </div>

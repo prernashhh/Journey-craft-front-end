@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import axios from 'axios';
 import Navbar from '../components/Navbar';
 import './CreateTrip.css'; // Reusing the CreateTrip styles
-import api from '../config/api'; // Import the API client
 
 function EditTrip() {
   const { id } = useParams();
@@ -30,7 +30,10 @@ function EditTrip() {
   useEffect(() => {
     const fetchTripDetails = async () => {
       try {
-        const response = await api.get(`/api/itineraries/${id}`);
+        const token = localStorage.getItem('token');
+        const response = await axios.get(`https://journety-craft-backend.onrender.com/api/itineraries/${id}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
         
         // Format dates for form inputs
         const formatDate = (dateString) => {
@@ -199,7 +202,17 @@ function EditTrip() {
 
       console.log('Sending update payload:', tripPayload);
       
-      await api.put(`/api/itineraries/${id}`, tripPayload);
+      const token = localStorage.getItem('token');
+      await axios.put(
+        `https://journety-craft-backend.onrender.com/api/itineraries/${id}`,
+        tripPayload,
+        { 
+          headers: { 
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          } 
+        }
+      );
       
       // Navigate to view the updated trip
       navigate(`/trips/${id}`);
@@ -209,7 +222,7 @@ function EditTrip() {
       if (err.response && err.response.data && err.response.data.error) {
         setError(`Failed to update trip: ${err.response.data.error}`);
       } else {
-        setError('Failed to update trip. Please check your internet connection and try again.');
+        setError('Failed to update trip. Please check your form data and try again.');
       }
     } finally {
       setSaving(false);

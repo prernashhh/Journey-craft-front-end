@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link } from 'react-router-dom';
 import { Search, MessageSquare, User, Mail } from "lucide-react";
-import api from "../config/api.js"; // Import the API client
+import axios from "axios";
 import LoginSignup from "./LoginSignup";
 import Navbar from "../components/Navbar";
 import "./Home.css";
@@ -15,13 +15,75 @@ function Dashboard() {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await api.get('/api/events');
-        setEvents(response.data);
+        // Check if we're in development mode and use mock data if API is not ready
+        const isDev = import.meta.env.MODE === 'development';
+        
+        if (isDev) {
+          // Use mock data for development
+          console.log('Using mock events data in development mode');
+          const mockEvents = [
+            {
+              _id: '1',
+              title: 'Summer Music Festival',
+              date: new Date('2025-07-15').toISOString(),
+              location: { city: 'Mumbai', country: 'India' },
+              price: { amount: 1500 }
+            },
+            {
+              _id: '2',
+              title: 'Tech Conference 2025',
+              date: new Date('2025-08-20').toISOString(),
+              location: { city: 'Bangalore', country: 'India' },
+              price: { amount: 2000 }
+            },
+            {
+              _id: '3',
+              title: 'Food & Wine Expo',
+              date: new Date('2025-06-10').toISOString(),
+              location: { city: 'Delhi', country: 'India' },
+              price: { amount: 1000 }
+            }
+          ];
+          setEvents(mockEvents);
+          setLoading(false);
+          return;
+        }
+        
+        // For production, try to fetch from the API
+        const apiUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+        const response = await axios.get(`${apiUrl}/api/events`);
+        
+        // Verify we got a valid response
+        if (response.data && !response.data.includes('<!DOCTYPE html>')) {
+          // Check if response.data is an array
+          if (Array.isArray(response.data)) {
+            setEvents(response.data);
+          } else if (response.data && Array.isArray(response.data.events)) {
+            // If response.data is an object with events property that's an array
+            setEvents(response.data.events);
+          } else if (response.data && typeof response.data === 'object') {
+            // If response.data is a non-array object, convert to array if possible
+            console.warn('API returned an object instead of an array. Attempting to convert.');
+            const eventsArray = Object.values(response.data);
+            setEvents(Array.isArray(eventsArray) ? eventsArray : []);
+          } else {
+            // Fallback to empty array
+            console.error('API response format is not as expected:', response.data);
+            setEvents([]);
+          }
+        } else {
+          // Got HTML or invalid response
+          console.error('Received HTML instead of JSON from API');
+          setEvents([]);
+        }
+        
         setLoading(false);
       } catch (err) {
         console.error('Error fetching events:', err);
         setError('Failed to load events');
         setLoading(false);
+        // Ensure events is an empty array in case of error
+        setEvents([]);
       }
     };
 
@@ -35,14 +97,18 @@ function Dashboard() {
   const renderEvents = () => {
     if (loading) return <div className="loading">Loading events...</div>;
     if (error) return <div className="error">{error}</div>;
-    if (events.length === 0) return <div>No upcoming events</div>;
+    
+    // Add safety check before mapping
+    if (!events || !Array.isArray(events) || events.length === 0) {
+      return <div>No upcoming events</div>;
+    }
 
     return (
       <div className="events-grid">
-        {events.map((event) => (
-          <div key={event._id} className="event-card">
+        {events.map((event, index) => (
+          <div key={event._id || event.id || index} className="event-card">
             <div className="event-details">
-              <h3 className="event-title">{event.title}</h3>
+              <h3 className="event-title">{event.title || event.name}</h3>
               <p className="event-date">
                 {new Date(event.date).toLocaleDateString('en-US', {
                   day: 'numeric',
@@ -51,9 +117,15 @@ function Dashboard() {
                 })}
               </p>
               <p className="event-venue">
-                {event.location.city}, {event.location.country}
+                {event.location?.city && event.location?.country 
+                  ? `${event.location.city}, ${event.location.country}`
+                  : event.location || 'Location not specified'}
               </p>
-              <p className="event-price">₹{event.price.amount}</p>
+              <p className="event-price">
+                {event.price?.amount 
+                  ? `₹${event.price.amount}` 
+                  : (typeof event.price === 'number' ? `₹${event.price}` : 'Price not available')}
+              </p>
               <button 
                 className="secondary-button" 
                 onClick={() => setShowLoginSignup(true)}
@@ -70,15 +142,14 @@ function Dashboard() {
   return (
     <div className="app">
       <Navbar isHomePage={true} onLoginClick={() => setShowLoginSignup(true)} />
-      <div className="navbar-spacer"></div> {/* Add this spacer */}
-
+      
       {/* Login/Signup Modal */}
       {showLoginSignup && <LoginSignup onClose={closeLoginSignup} />}
 
       {/* Hero Section */}
-      <section className="hero">
-        <div className="hero-content">
-          <h1 className="hero-title">Welcome to Journey Craft</h1>
+      <section className="home-hero">
+        <div className="home-hero-content">
+          <h1 className="home-hero-title">Welcome to Journey Craft</h1>
           <button className="primary-button" onClick={() => setShowLoginSignup(true)}>Get started</button>
         </div>
       </section>

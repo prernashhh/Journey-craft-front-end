@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import api from '../config/api'; // Import the API client
+import axios from 'axios';
 import { Search, SendHorizontal, UserPlus, ArrowLeft } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import './Messages.css';
@@ -43,7 +43,10 @@ function Messages() {
   const fetchConversations = async () => {
     try {
       setLoading(true);
-      const response = await api.get('/api/messages/conversations');
+      const token = localStorage.getItem('token');
+      const response = await axios.get('https://journety-craft-backend.onrender.com/api/messages/conversations', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
       setConversations(response.data);
       setLoading(false);
     } catch (err) {
@@ -56,13 +59,20 @@ function Messages() {
   const fetchMessages = async (otherUserId) => {
     try {
       setLoading(true);
-      const response = await api.get(`/api/messages/${otherUserId}`);
+      const token = localStorage.getItem('token');
+      const response = await axios.get(`https://journety-craft-backend.onrender.com/api/messages/${otherUserId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
       setMessages(response.data);
       setLoading(false);
       
       // Mark messages as read
       try {
-        await api.put(`/api/messages/${otherUserId}/read`, {});
+        await axios.put(
+          `https://journety-craft-backend.onrender.com/api/messages/${otherUserId}/read`,
+          {},
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
         
         // Update unread count in conversations list
         setConversations(prevConversations => 
@@ -86,10 +96,15 @@ function Messages() {
     if (!newMessage.trim() || !selectedConversation) return;
     
     try {
-      const response = await api.post('/api/messages', {
-        recipientId: selectedConversation.user._id,
-        content: newMessage
-      });
+      const token = localStorage.getItem('token');
+      const response = await axios.post(
+        'https://journety-craft-backend.onrender.com/api/messages',
+        {
+          recipientId: selectedConversation.user._id,
+          content: newMessage
+        },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
       
       // Add the sent message to the messages list
       setMessages(prev => [...prev, response.data]);
@@ -117,8 +132,11 @@ function Messages() {
     try {
       setLoading(true);
       setError(null); // Reset any previous errors
+      const token = localStorage.getItem('token');
       
-      const response = await api.get('/api/users/me/mutual-followers');
+      const response = await axios.get('https://journety-craft-backend.onrender.com/api/users/me/mutual-followers', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
       
       console.log('Mutual followers response:', response.data);
       setFollowers(response.data || []);

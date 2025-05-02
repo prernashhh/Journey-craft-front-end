@@ -7,7 +7,7 @@
 .profile-container {
   max-width: 1000px;
   margin: 0 auto;
-  padding: 2rem 1.5rem;
+  padding: 5rem 1.5rem;
 }
 
 /* Profile Header */
@@ -609,6 +609,82 @@
 .unfollow-button:hover {
   background-color: #ef4444;
   color: white;
+}
+
+/* Custom Itineraries */
+.custom-itineraries-section {
+  padding: 1.5rem;
+}
+
+.itineraries-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.itinerary-card {
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.itinerary-card-body {
+  padding: 1.5rem;
+}
+
+.itinerary-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin-bottom: 1rem;
+}
+
+.itinerary-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.date-range, .duration {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #64748b;
+  font-size: 0.875rem;
+}
+
+.preferences {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.75rem;
+  background-color: #f8fafc;
+  border-radius: 0.375rem;
+}
+
+.status, .estimated-price {
+  font-weight: 500;
+}
+
+.status {
+  color: #0284c7;
+}
+
+.estimated-price {
+  color: #0f172a;
+}
+
+.attractions ul {
+  list-style: none;
+  padding-left: 1rem;
+  margin-top: 0.5rem;
+}
+
+.attractions li {
+  color: #64748b;
+  font-size: 0.875rem;
 }
 
 /* Loading States */

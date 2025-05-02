@@ -15,10 +15,19 @@ import EditTrip from './pages/EditTrip';
 import Rewards from './pages/Rewards';
 import Messages from './pages/Messages';
 import Interests from './pages/Interests';
+import TravelBooking from './pages/TravelBooking';
+import ItineraryDetailView from './pages/ItineraryDetailView';
+import Wishlist from './pages/Wishlist';
 import './App.css';
+import './styles/itinerary-components.css';
 
 function App() {
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, user, isLoading } = useAuth();
+
+  // Show loading indicator while auth state is being determined
+  if (isLoading) {
+    return <div className="loading">Loading...</div>;
+  }
 
   return (
     <div className="app">
@@ -108,6 +117,21 @@ function App() {
         <Route 
           path="/interests" 
           element={<Interests />} 
+        />
+
+        <Route 
+          path="/travel-booking" 
+          element={<TravelBooking />} 
+        />
+
+        <Route 
+          path="/itineraries/:id" 
+          element={<ItineraryDetailView />} 
+        />
+
+        <Route 
+          path="/wishlist" 
+          element={<Wishlist />} 
         />
       </Routes>
       {isAuthenticated && <Footer />}
