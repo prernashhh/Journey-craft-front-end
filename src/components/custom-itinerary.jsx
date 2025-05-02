@@ -29,31 +29,31 @@ export function CustomItinerary() {
         id: "delhi1", 
         name: "Red Fort", 
         description: "Historic fort built in the 17th century",
-        image: "https://images.unsplash.com/photo-1585484173186-5f8757105b25?q=80&w=1470&auto=format&fit=crop"
+        image: "https://images.unsplash.com/photo-1713729991304-d0b6c328560e?q=80&w=1986&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
       },
       { 
         id: "delhi2", 
         name: "Qutub Minar", 
         description: "UNESCO World Heritage site with a 73-meter tall tower",
-        image: "https://images.unsplash.com/photo-1587135941948-670b381f08ce?q=80&w=1470&auto=format&fit=crop"
+        image: "https://plus.unsplash.com/premium_photo-1697729438410-d53c666e3810?q=80&w=1974&auto=format&fit=crop"
       },
       { 
         id: "delhi3", 
         name: "India Gate", 
         description: "War memorial in the heart of Delhi",
-        image: "https://images.unsplash.com/photo-1586183189334-1393e5f2cb0d?q=80&w=1469&auto=format&fit=crop"
+        image: "https://images.unsplash.com/photo-1705077171489-b5dfcf144676?q=80&w=1935&auto=format&fit=crop"
       },
       { 
         id: "delhi4", 
         name: "Lotus Temple", 
         description: "Stunning Bahá'í House of Worship shaped like a lotus flower",
-        image: "https://images.unsplash.com/photo-1580188911874-f95af12a219d?q=80&w=1470&auto=format&fit=crop"
+        image: "https://images.unsplash.com/photo-1669873939341-9d34c6434c56?q=80&w=1964&auto=format&fit=crop"
       },
       { 
         id: "delhi5", 
         name: "Humayun's Tomb", 
         description: "Magnificent tomb that inspired the Taj Mahal",
-        image: "https://images.unsplash.com/photo-1610469385253-ef7144245faa?q=80&w=1470&auto=format&fit=crop"
+        image: "https://images.unsplash.com/photo-1705572243594-0f6b1e60915d?w=600&auto=format&fit=crop"
       }
     ],
     "Manali": [
@@ -67,13 +67,13 @@ export function CustomItinerary() {
         id: "manali2", 
         name: "Hadimba Temple", 
         description: "Ancient wooden temple dedicated to Goddess Hadimba",
-        image: "https://images.unsplash.com/photo-1573388545311-d8d079204b2d?q=80&w=1470&auto=format&fit=crop"
+        image: "https://images.unsplash.com/photo-1655470062196-c37e923fc4c1?q=80&w=2070&auto=format&fit=crop"
       },
       { 
         id: "manali3", 
         name: "Rohtang Pass", 
         description: "High mountain pass with breathtaking views",
-        image: "https://images.unsplash.com/photo-1518259102261-391241e57e2b?q=80&w=1470&auto=format&fit=crop"
+        image: "https://images.unsplash.com/photo-1651955670895-9aa2e9243b66?q=80&w=1974&auto=format&fit=crop"
       },
       { 
         id: "manali4", 
@@ -85,7 +85,7 @@ export function CustomItinerary() {
         id: "manali5", 
         name: "Jogini Waterfall", 
         description: "Beautiful waterfall surrounded by pine forests",
-        image: "https://images.unsplash.com/photo-1688749432924-1c324e506f00?q=80&w=1470&auto=format&fit=crop"
+        image: "https://images.unsplash.com/photo-1629478286877-5d796000a5af?q=80&w=1974&auto=format&fit=crop"
       }
     ]
   };
