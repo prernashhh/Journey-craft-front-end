@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from 'react-router-dom';
-import { Search, MessageSquare, User, Mail } from "lucide-react";
-import axios from "axios";
+import { Search, MessageSquare, User, Mail, Calendar, MapPin, Clock } from "lucide-react";
+import axios from "axios"; // Make sure axios is imported
 import LoginSignup from "./LoginSignup";
 import Navbar from "../components/Navbar";
 import "./Home.css";
@@ -15,75 +15,31 @@ function Dashboard() {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        // Check if we're in development mode and use mock data if API is not ready
-        const isDev = import.meta.env.MODE === 'development';
+        setLoading(true);
         
-        if (isDev) {
-          // Use mock data for development
-          console.log('Using mock events data in development mode');
-          const mockEvents = [
-            {
-              _id: '1',
-              title: 'Summer Music Festival',
-              date: new Date('2025-07-15').toISOString(),
-              location: { city: 'Mumbai', country: 'India' },
-              price: { amount: 1500 }
-            },
-            {
-              _id: '2',
-              title: 'Tech Conference 2025',
-              date: new Date('2025-08-20').toISOString(),
-              location: { city: 'Bangalore', country: 'India' },
-              price: { amount: 2000 }
-            },
-            {
-              _id: '3',
-              title: 'Food & Wine Expo',
-              date: new Date('2025-06-10').toISOString(),
-              location: { city: 'Delhi', country: 'India' },
-              price: { amount: 1000 }
-            }
-          ];
-          setEvents(mockEvents);
-          setLoading(false);
-          return;
-        }
+        // Fetch events directly from the backend
+        console.log('Fetching events from API...');
+        const response = await axios.get('https://journety-craft-backend.onrender.com/api/events');
+        console.log('Events API response:', response.data);
         
-        // For production, try to fetch from the API
-        const apiUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
-        const response = await axios.get(`${apiUrl}/api/events`);
-        
-        // Verify we got a valid response
-        if (response.data && !response.data.includes('<!DOCTYPE html>')) {
-          // Check if response.data is an array
-          if (Array.isArray(response.data)) {
-            setEvents(response.data);
-          } else if (response.data && Array.isArray(response.data.events)) {
-            // If response.data is an object with events property that's an array
-            setEvents(response.data.events);
-          } else if (response.data && typeof response.data === 'object') {
-            // If response.data is a non-array object, convert to array if possible
-            console.warn('API returned an object instead of an array. Attempting to convert.');
-            const eventsArray = Object.values(response.data);
-            setEvents(Array.isArray(eventsArray) ? eventsArray : []);
-          } else {
-            // Fallback to empty array
-            console.error('API response format is not as expected:', response.data);
-            setEvents([]);
-          }
+        if (Array.isArray(response.data)) {
+          setEvents(response.data);
+        } else if (response.data && Array.isArray(response.data.events)) {
+          setEvents(response.data.events);
+        } else if (response.data && typeof response.data === 'object') {
+          console.warn('Converting response object to array');
+          const eventsArray = Object.values(response.data);
+          setEvents(Array.isArray(eventsArray) ? eventsArray : []);
         } else {
-          // Got HTML or invalid response
-          console.error('Received HTML instead of JSON from API');
+          console.error('Invalid API response format:', response.data);
           setEvents([]);
         }
-        
-        setLoading(false);
       } catch (err) {
         console.error('Error fetching events:', err);
         setError('Failed to load events');
-        setLoading(false);
-        // Ensure events is an empty array in case of error
         setEvents([]);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -98,7 +54,6 @@ function Dashboard() {
     if (loading) return <div className="loading">Loading events...</div>;
     if (error) return <div className="error">{error}</div>;
     
-    // Add safety check before mapping
     if (!events || !Array.isArray(events) || events.length === 0) {
       return <div>No upcoming events</div>;
     }
@@ -110,6 +65,7 @@ function Dashboard() {
             <div className="event-details">
               <h3 className="event-title">{event.title || event.name}</h3>
               <p className="event-date">
+                <Calendar size={16} />
                 {new Date(event.date).toLocaleDateString('en-US', {
                   day: 'numeric',
                   month: 'long',
@@ -117,14 +73,15 @@ function Dashboard() {
                 })}
               </p>
               <p className="event-venue">
+                <MapPin size={16} />
                 {event.location?.city && event.location?.country 
                   ? `${event.location.city}, ${event.location.country}`
                   : event.location || 'Location not specified'}
               </p>
               <p className="event-price">
-                {event.price?.amount 
-                  ? `₹${event.price.amount}` 
-                  : (typeof event.price === 'number' ? `₹${event.price}` : 'Price not available')}
+                ₹{event.price?.amount 
+                  ? `${event.price.amount}` 
+                  : (typeof event.price === 'number' ? `${event.price}` : 'Price not available')}
               </p>
               <button 
                 className="secondary-button" 
@@ -281,7 +238,7 @@ function Dashboard() {
         </div>
       </footer>
     </div>
-  )
+  );
 }
 
 export default Dashboard;
