@@ -3,6 +3,7 @@ import { AlertCircle, LogIn, UserPlus } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from "../context/AuthContext";
 import axios from "axios";
+import { auth, googleProvider, signInWithPopup } from "../config/firebase"; // Make sure to import these
 import "./LoginSignup.css";
 
 function LoginSignup({ onClose }) {
@@ -16,7 +17,7 @@ function LoginSignup({ onClose }) {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { login, signup, googleLogin } = useAuth();
+  const { login } = useAuth(); // Remove 'signup' and 'googleLogin' if they're not used
 
   const handleChange = (e) => {
     setFormData({
@@ -79,6 +80,7 @@ function LoginSignup({ onClose }) {
       setLoading(true);
       setError("");
       
+      // Use the imported signInWithPopup function
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
       
